@@ -1,0 +1,205 @@
+{
+  "author": "Wakinah-Entreprise",
+  "cloudEndpoint": "https://demeuredesdix.fr/mcp",
+  "description": "Public MCP server for La Demeure des Dix, a privatized holiday house for 10 guests near Rouen, Normandy: property info, dog stays, house rules, booking options, availability, quotes.",
+  "homepage": "https://demeuredesdix.fr",
+  "icon": "https://demeuredesdix.fr/apple-touch-icon.png",
+  "identifier": "demeuredesdix",
+  "name": "La Demeure des Dix",
+  "prompts": [],
+  "resources": [],
+  "tags": [
+    "travel",
+    "vacation-rental",
+    "holiday-house",
+    "dog-friendly",
+    "normandy",
+    "rouen",
+    "france",
+    "read-only"
+  ],
+  "tools": [
+    {
+      "name": "get_property_information",
+      "title": "Discover La Demeure des Dix",
+      "description": "Public verified description, capacity and facilities of the fully privatized property near Rouen. French source text may be translated by the assistant.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_dog_information",
+      "title": "Plan a stay with your dog — QUALIDOG and FAQ",
+      "description": "Public QUALIDOG label and dog-stay FAQ in French, English, German or Dutch, with canonical sources. Covers prior host approval, fees, enclosed garden, preparing your stay and local outings. Checked against current property rules and fees; never approves a dog or confirms a booking.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "language": {
+            "default": "fr",
+            "type": "string",
+            "enum": [
+              "fr",
+              "en",
+              "de",
+              "nl"
+            ]
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_stay_rules",
+      "title": "Stay rules and fees",
+      "description": "Public check-in, check-out, group, dog, cleaning and event rules. Every dog needs prior host approval. Amounts are EUR minor units and do not replace a live total quote.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_booking_options",
+      "title": "Official booking and contact links",
+      "description": "Official website, booking page and public contact. Booking and payment are completed on the official site, never inside this AI tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "check_availability",
+      "title": "Check one stay",
+      "description": "Check a bounded stay against the live authoritative calendar. An unknown source returns source_unavailable; a positive result never holds inventory or approves dogs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "check_in": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Local arrival date, YYYY-MM-DD"
+          },
+          "check_out": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Local departure date, YYYY-MM-DD"
+          },
+          "adults": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "children": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "dogs": {
+            "default": 0,
+            "description": "Number of companion dogs; every dog requires prior host approval",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          }
+        },
+        "required": [
+          "check_in",
+          "check_out",
+          "adults"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_quote",
+      "title": "Get a complete live quote",
+      "description": "Return a verified total in EUR minor units only when live availability, rates, fees and taxes are complete. A priced dog stay still needs host approval. Otherwise report incomplete or source_unavailable, never an estimated total.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "check_in": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Local arrival date, YYYY-MM-DD"
+          },
+          "check_out": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Local departure date, YYYY-MM-DD"
+          },
+          "adults": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "children": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "dogs": {
+            "default": 0,
+            "description": "Number of companion dogs; every dog requires prior host approval",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          }
+        },
+        "required": [
+          "check_in",
+          "check_out",
+          "adults"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ],
+  "version": "1.1.0"
+}
